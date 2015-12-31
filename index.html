@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <title>data visualisation</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+
+    <meta name="author" content="patmaz | cogcoding.com">
+    
+    <!-- jquery -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    
+    <!-- jqplot and plugins -->
+    <script type="text/javascript" src="js/jquery.jqplot.min.js"></script>
+    <script type="text/javascript" src="plugins/jqplot.enhancedLegendRenderer.min.js"></script>
+    <script type="text/javascript" src="plugins/jqplot.categoryAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="plugins/jqplot.barRenderer.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/jquery.jqplot.css" />
+    
+    <!-- custom js and styles -->
+    <script type="text/javascript" src="js/custom.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/custom.css" />
+
+</head>
+<body>
+    
+    <div class="plot" id="revenue">
+        <img src="img/rev.png">
+        <h2>Revenue by Solution</h2>
+        <h3>Revenue per week</h3>
+        <div id="plot1"></div>
+        <div class="summary">
+            <span>$</span>
+            <span id="revenueSum"></span>
+            <span>Revenue Stream</span>
+            <button>Revenue Analysis</button>
+        </div>
+    </div>
+    
+    <div class="plot" id="installations">
+        <img src="img/install.png">
+        <h2>Installations</h2>
+        <h3>Installations per week</h3>
+        <div id="plot2"></div>
+        <div class="summary">
+            <span></span>
+            <span id="installationsSum"></span>
+            <span>Installations</span>
+            <button>View Installations</button>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,4 +1,9 @@
 # Data Visualisation
+
+BRANCH IN PROGRESS
+
+read data from single JSON array
+
 The following technologies were used:
 
 * jquery - a basic framework required by jqplot...

@@ -1,22 +1,60 @@
-// ###################################### DATA
+// ###################################### DATA JSON
+var dataArray = [
+    {
+        "weeks": ["week 1", "week 2", "week 3", "week 4", "week 5"],
+    },
+    {
+        "label": "NetComp",
+        "revenue": [100, 200, 300, 400, 300],
+        "installations": [10, 10, 10, 10, 10],
+    },
+    {
+        "label": "AnalyzerHR",
+        "revenue": [500, 600, 700, 800, 700],
+        "installations": [20, 20, 20, 20, 20],
+    },
+    {
+        "label": "QuestionRight",
+        "revenue": [900, 1000, 1100, 1200, 1100],
+        "installations": [30, 30, 30, 30, 30],
+    }
+];
+
 // series for revenue line chart
-var revenue1 = [100, 200, 300, 400, 300]; //label:'NetComp'
-var revenue2 = [500, 600, 700, 800, 700]; //label:'AnalyzerHR'
-var revenue3 = [900, 1000, 1100, 1200, 1100]; //label:'QuestionRight"
+var revenue1 = dataArray[1].revenue; //label:'NetComp'
+var revenue2 = dataArray[2].revenue; //label:'AnalyzerHR'
+var revenue3 = dataArray[3].revenue; //label:'QuestionRight"
 
 //series for installations bar chart
-var installations1 = [10, 10, 10, 10, 10]; // label:'NetComp'
-var installations2 = [20, 20, 20, 20, 20]; // label:'AnalyzerHR'
-var installations3 = [30, 30, 30, 30, 30]; // label:'Question Right'
+var installations1 = dataArray[1].installations; // label:'NetComp'
+var installations2 = dataArray[2].installations; // label:'AnalyzerHR'
+var installations3 = dataArray[3].installations; // label:'Question Right'
 
 //labels
-var labels = ["NetComp", "AnalyzerHR", "QuestionRight"];
+var labels = [dataArray[1].label, dataArray[2].label, dataArray[3].label];
 
 //time points for both graphs (axis is categorical)
-var weeks = ["week 1", "week 2", "week 3", "week 4", "week 5"];
+var weeks = dataArray[0];
+
+// ###################################################
+// ############################################### SUM
+    
+function sumValuesInAllSeries(nameOfSeries, numberOfSeries){
+
+    // sam all values
+    var grandSum = 0;
+    for (var i=1; i <= numberOfSeries; i++){
+        for (var i2=0; i2 < window[nameOfSeries + i].length; i2++){
+            grandSum += window[nameOfSeries + i][i2];
+
+            console.log(window[nameOfSeries + i][i2]);
+        }
+    }
+
+    return grandSum;
+}
 
 $(document).ready(function(){
-    
     // #####################################
     // #################line chart generator
     var plot1 = $.jqplot('plot1', [revenue1, revenue2, revenue3], {
@@ -122,25 +160,7 @@ $(document).ready(function(){
     });
     // /bar chart
     
-    // ###################################################
-    // ############################################### SUM
-    
-    function sumValuesInAllSeries(nameOfSeries, numberOfSeries){
-        
-        // sam all values
-        var grandSum = 0;
-        for (var i=1; i <= numberOfSeries; i++){
-            for (var i2=0; i2 < window[nameOfSeries + i].length; i2++){
-                grandSum += window[nameOfSeries + i][i2];
-                
-                console.log(window[nameOfSeries + i][i2]);
-            }
-        }
-        
-        return grandSum;
-    }
-    
-    // insert values to html file
+    // ############################### insert values to html file
     $("#revenueSum").text(sumValuesInAllSeries("revenue", 3));
     $("#installationsSum").text(sumValuesInAllSeries("installations", 3));
     

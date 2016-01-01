@@ -11,7 +11,7 @@ div.jqplot-target {
 }
 
 .plot {
-    border: 1px #426ea2 solid;
+    border: 1px #80b3d5 solid;
     width: 750px;
     margin: 50px auto;
     position: relative;
@@ -25,14 +25,14 @@ h2 {
     background: #dbeffc;
     margin: 0;
     padding: 0.5em 1em 0.5em 4em;
-    border-bottom: 1px #426ea2 solid;
+    border-bottom: 1px #80b3d5 solid;
     z-index: 1;
     color: #05415b;
 }
 
 .plot img {
     position: absolute;
-    top: -20px;
+    top: -10px;
     left: 10px;
     z-index: 5;
 }

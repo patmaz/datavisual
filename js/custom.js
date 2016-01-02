@@ -1,39 +1,24 @@
-// ###################################### DATA JSON - provide data here!!!
-// another product or time point may be added
-// revenue and installatons values refer to consecutive weeks
-var dataArray = [
-    {
-        "weeks": ["week 1", "week 2", "week 3", "week 4", "week 5"],
-    },
-    {
-        "label": "NetComp",
-        "revenue": [100, 200, 300, 400, 300],
-        "installations": [10, 10, 10, 10, 10],
-    },
-    {
-        "label": "AnalyzerHR",
-        "revenue": [500, 600, 700, 800, 700],
-        "installations": [20, 20, 20, 20, 20],
-    },
-    {
-        "label": "QuestionRight",
-        "revenue": [900, 1000, 1100, 1200, 1100],
-        "installations": [30, 30, 30, 30, 30],
-    },
-    {
-        "label": "another",
-        "revenue": [1200, 1300, 1400, 1500, 1400],
-        "installations": [40, 40, 40, 40, 40],
-    },
-    {
-        "label": "another2",
-        "revenue": [1500, 1600, 1700, 1800, 1700],
-        "installations": [50, 50, 50, 50, 50],
-    }
-];
+$(document).ready(function(){
+// ###################################### DATA JSON - provide data in json/data.json file!!!
+// self-invoking function reads json file
+(function() {
+	var data = [];
+	$.getJSON("json/data.json", function(d){ //asynchronous ajax call...
+		for(var i=0; i < d.length; i++){
+			data.push(d[i]);
+		}
+	})
+    .done(function(d) { //... after it's done...
+        console.log("data from json file");
+		console.log(data);
+        loadPageContent(getDataForJqplot(data)); //... graphs and sums are loaded
+    });
+})();
 
 // function mutates structure of data from JSON for jqplot
-function getDataForJqplot() {
+function getDataForJqplot(data) {
+    var dataArray = data;
+    
     var allRevenues = [];
     var allInstallations =[];
     var labels = [];
@@ -65,31 +50,16 @@ function getDataForJqplot() {
         numberOfSeries: dataArray.length - 1
     };
     
+    console.log("restructured data for jqplot");
+    console.log(allData);
     return allData;
 }
 
-var allData = getDataForJqplot();
-
-// ############################################### SUM
-function sumValuesInAllSeries(nameOfSeries){
-
-    // sam all values
-    var grandSum = 0;
-    for (var i=0; i < allData[nameOfSeries].length; i++){
-        for (var i2=0; i2 < allData[nameOfSeries][i].length; i2++){
-            grandSum += allData[nameOfSeries][i][i2];
-
-            console.log(allData[nameOfSeries][i][i2]);
-        }
-    }
-
-    return grandSum;
-}
-
-$(document).ready(function(){
+function loadPageContent(data){
+    var allDataForJqplot = data;
     // #####################################
     // #################line chart generator
-    var plot1 = $.jqplot('plot1', allData.revenues, {
+    var plot1 = $.jqplot('plot1', allDataForJqplot.revenues, {
         //legend options
         legend: {
             renderer: $.jqplot.EnhancedLegendRenderer,
@@ -103,7 +73,7 @@ $(document).ready(function(){
         //fill between lines
         fillBetween: {
             series1: 0, //1st series
-            series2: allData.numberOfSeries - 1, //last series
+            series2: allDataForJqplot.numberOfSeries - 1, //last series
             color: "#e7f6ff",
         },
         // background and whole grid
@@ -116,7 +86,7 @@ $(document).ready(function(){
         axes: {
             xaxis: {
               renderer: $.jqplot.CategoryAxisRenderer,
-                ticks: allData.weeks, // weeks array
+                ticks: allDataForJqplot.weeks, // weeks array
               label: '',
                 tickOptions:{
                     showGridline: false, //no vertical lines
@@ -137,14 +107,14 @@ $(document).ready(function(){
             markerOptions: { size: 10 }, 
             shadow: false
         },
-        series: allData.labelsAndColor
+        series: allDataForJqplot.labelsAndColor
     });
     
     // /line chart
     
     // ####################################
     // #################bar chart generator
-    var plot2 = $.jqplot('plot2', allData.installations, {
+    var plot2 = $.jqplot('plot2', allDataForJqplot.installations, {
         seriesDefaults:{
             renderer:$.jqplot.BarRenderer, //all series as bars
             rendererOptions: {
@@ -159,7 +129,7 @@ $(document).ready(function(){
             shadow: false
         },
         // labels and colors for series
-        series: allData.labelsAndColor,
+        series: allDataForJqplot.labelsAndColor,
         // legend options
         legend: {
             renderer: $.jqplot.EnhancedLegendRenderer,
@@ -174,7 +144,7 @@ $(document).ready(function(){
         axes: {
             xaxis: {
                 renderer: $.jqplot.CategoryAxisRenderer,
-                ticks: allData.weeks, // weeks array
+                ticks: allDataForJqplot.weeks, // weeks array
                 tickOptions:{
                     showGridline: false, // no vertical lines
                     textColor: "#05415b"
@@ -190,8 +160,25 @@ $(document).ready(function(){
     });
     // /bar chart
     
-    // ############################### insert values to html file
+    // returns sum of values from specified series
+    function sumValuesInAllSeries(nameOfSeries){
+
+    // sam all values
+        var grandSum = 0;
+        console.log("values of all " + nameOfSeries);
+        for (var i=0; i < allDataForJqplot[nameOfSeries].length; i++){
+            for (var i2=0; i2 < allDataForJqplot[nameOfSeries][i].length; i2++){
+                grandSum += allDataForJqplot[nameOfSeries][i][i2];
+                
+                console.log(allDataForJqplot[nameOfSeries][i][i2]);
+            }
+        }
+
+        return grandSum;
+    }
+    
+    // ############################### insert sum values to html
     $("#revenueSum").text(sumValuesInAllSeries("revenues"));
     $("#installationsSum").text(sumValuesInAllSeries("installations"));
-    
+}
 });

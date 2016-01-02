@@ -1,0 +1,30 @@
+[
+    {
+        "weeks": ["week 1", "week 2", "week 3", "week 4", "week 5"]
+    },
+    {
+        "label": "NetComp",
+        "revenue": [100, 200, 300, 400, 300],
+        "installations": [10, 10, 10, 10, 10]
+    },
+    {
+        "label": "AnalyzerHR",
+        "revenue": [500, 600, 700, 800, 700],
+        "installations": [20, 20, 20, 20, 20]
+    },
+    {
+        "label": "QuestionRight",
+        "revenue": [900, 1000, 1100, 1200, 1100],
+        "installations": [30, 30, 30, 30, 30]
+    },
+    {
+        "label": "another",
+        "revenue": [1200, 1300, 1400, 1500, 1400],
+        "installations": [40, 40, 40, 40, 40]
+    },
+    {
+        "label": "another2",
+        "revenue": [1500, 1600, 1700, 1800, 1700],
+        "installations": [50, 50, 50, 50, 50]
+    }
+]

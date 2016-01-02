@@ -1,4 +1,6 @@
-// ###################################### DATA JSON
+// ###################################### DATA JSON - provide data here!!!
+// another product or time point may be added
+// revenue and installatons values refer to consecutive weeks
 var dataArray = [
     {
         "weeks": ["week 1", "week 2", "week 3", "week 4", "week 5"],
@@ -17,37 +19,67 @@ var dataArray = [
         "label": "QuestionRight",
         "revenue": [900, 1000, 1100, 1200, 1100],
         "installations": [30, 30, 30, 30, 30],
+    },
+    {
+        "label": "another",
+        "revenue": [1200, 1300, 1400, 1500, 1400],
+        "installations": [40, 40, 40, 40, 40],
+    },
+    {
+        "label": "another2",
+        "revenue": [1500, 1600, 1700, 1800, 1700],
+        "installations": [50, 50, 50, 50, 50],
     }
 ];
 
-// series for revenue line chart
-var revenue1 = dataArray[1].revenue; //label:'NetComp'
-var revenue2 = dataArray[2].revenue; //label:'AnalyzerHR'
-var revenue3 = dataArray[3].revenue; //label:'QuestionRight"
-
-//series for installations bar chart
-var installations1 = dataArray[1].installations; // label:'NetComp'
-var installations2 = dataArray[2].installations; // label:'AnalyzerHR'
-var installations3 = dataArray[3].installations; // label:'Question Right'
-
-//labels
-var labels = [dataArray[1].label, dataArray[2].label, dataArray[3].label];
-
-//time points for both graphs (axis is categorical)
-var weeks = dataArray[0];
-
-// ###################################################
-// ############################################### SUM
+// function mutates structure of data from JSON for jqplot
+function getDataForJqplot() {
+    var allRevenues = [];
+    var allInstallations =[];
+    var labels = [];
+    var weeks = dataArray[0].weeks;
+    var seriesLabelsAndColor = [];
     
-function sumValuesInAllSeries(nameOfSeries, numberOfSeries){
+    // generate pseudorandom color for lines and bars
+    // http://stackoverflow.com/questions/1484506/random-color-generator-in-javascript
+    function getRandomColor() {
+        var letters = "0123456789ABCDEF".split("");
+        var color = "#";
+        for (var i = 0; i < 6; i++ ) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+    
+    for (var i=1; i < dataArray.length; i++){
+        allRevenues.push(dataArray[i].revenue); //revenues in one array
+        allInstallations.push(dataArray[i].installations); // installations in one array
+        seriesLabelsAndColor.push({label: dataArray[i].label, color: getRandomColor()}); // labels and their colors in one array of objects
+    }
+    
+    var allData = {
+        revenues: allRevenues,
+        installations: allInstallations,
+        weeks: weeks,
+        labelsAndColor: seriesLabelsAndColor,
+        numberOfSeries: dataArray.length - 1
+    };
+    
+    return allData;
+}
+
+var allData = getDataForJqplot();
+
+// ############################################### SUM
+function sumValuesInAllSeries(nameOfSeries){
 
     // sam all values
     var grandSum = 0;
-    for (var i=1; i <= numberOfSeries; i++){
-        for (var i2=0; i2 < window[nameOfSeries + i].length; i2++){
-            grandSum += window[nameOfSeries + i][i2];
+    for (var i=0; i < allData[nameOfSeries].length; i++){
+        for (var i2=0; i2 < allData[nameOfSeries][i].length; i2++){
+            grandSum += allData[nameOfSeries][i][i2];
 
-            console.log(window[nameOfSeries + i][i2]);
+            console.log(allData[nameOfSeries][i][i2]);
         }
     }
 
@@ -57,7 +89,7 @@ function sumValuesInAllSeries(nameOfSeries, numberOfSeries){
 $(document).ready(function(){
     // #####################################
     // #################line chart generator
-    var plot1 = $.jqplot('plot1', [revenue1, revenue2, revenue3], {
+    var plot1 = $.jqplot('plot1', allData.revenues, {
         //legend options
         legend: {
             renderer: $.jqplot.EnhancedLegendRenderer,
@@ -71,7 +103,7 @@ $(document).ready(function(){
         //fill between lines
         fillBetween: {
             series1: 0, //1st series
-            series2: 2, //2nd series
+            series2: allData.numberOfSeries - 1, //last series
             color: "#e7f6ff",
         },
         // background and whole grid
@@ -84,7 +116,7 @@ $(document).ready(function(){
         axes: {
             xaxis: {
               renderer: $.jqplot.CategoryAxisRenderer,
-                ticks: weeks, // weeks array
+                ticks: allData.weeks, // weeks array
               label: '',
                 tickOptions:{
                     showGridline: false, //no vertical lines
@@ -100,23 +132,25 @@ $(document).ready(function(){
             }
       },
         //styles and lebales for series
-        series:[ 
-          {lineWidth:5, markerOptions: { size: 10 }, color: "#ed6e37", label: labels[0], shadow: false}, 
-          {lineWidth:5, markerOptions: { size: 10 }, color: "#15a0c8", label: labels[1], shadow: false},
-          {lineWidth:5, markerOptions: { size: 10 }, color: "#259e01", label: labels[2], shadow: false}
-        ]
+        seriesDefaults: {
+            lineWidth:5, 
+            markerOptions: { size: 10 }, 
+            shadow: false
+        },
+        series: allData.labelsAndColor
     });
     
     // /line chart
     
     // ####################################
     // #################bar chart generator
-    var plot2 = $.jqplot('plot2', [installations1, installations2, installations3], {
+    var plot2 = $.jqplot('plot2', allData.installations, {
         seriesDefaults:{
             renderer:$.jqplot.BarRenderer, //all series as bars
             rendererOptions: {
                 barWidth: 8
-            }
+            },
+            shadow: false
         },
         // background and whole grid
         grid: {
@@ -125,11 +159,7 @@ $(document).ready(function(){
             shadow: false
         },
         // labels and colors for series
-        series:[
-            {label:labels[0], color: "#ed6e37", shadow: false},
-            {label:labels[1], color: "#15a0c8", shadow: false},
-            {label:labels[2], color: "#259e01", shadow: false}
-        ],
+        series: allData.labelsAndColor,
         // legend options
         legend: {
             renderer: $.jqplot.EnhancedLegendRenderer,
@@ -144,7 +174,7 @@ $(document).ready(function(){
         axes: {
             xaxis: {
                 renderer: $.jqplot.CategoryAxisRenderer,
-                ticks: weeks, // weeks array
+                ticks: allData.weeks, // weeks array
                 tickOptions:{
                     showGridline: false, // no vertical lines
                     textColor: "#05415b"
@@ -161,7 +191,7 @@ $(document).ready(function(){
     // /bar chart
     
     // ############################### insert values to html file
-    $("#revenueSum").text(sumValuesInAllSeries("revenue", 3));
-    $("#installationsSum").text(sumValuesInAllSeries("installations", 3));
+    $("#revenueSum").text(sumValuesInAllSeries("revenues"));
+    $("#installationsSum").text(sumValuesInAllSeries("installations"));
     
 });

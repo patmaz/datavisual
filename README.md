@@ -1,8 +1,4 @@
-# Data Visualisation
-
-BRANCH IN PROGRESS
-
-read data from single JSON array
+# Data Visualisation - from JSON to graphs
 
 The following technologies were used:
 
